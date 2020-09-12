@@ -237,8 +237,8 @@ export function decode(string: string): Uint8Array | null {
   let value = 0
 
   while (charNbr < string.length) {
+    if (!encoder.includes(string.charAt(charNbr))) return null // invalid character
     const index = string.charCodeAt(charNbr++) - 32
-    if (index < 0 || index >= decoder.length) return null // invalid characters in string
     value = value * 85 + decoder[index]
     if (charNbr % 5 === 0) {
       let divisor = 16777216 // 256 * 256 * 256
