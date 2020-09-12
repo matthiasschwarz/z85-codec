@@ -46,6 +46,12 @@ const testData2: Uint8Array = Uint8Array.of(
   0xb7
 )
 
+function arrayToString(array: Uint8Array): string {
+  return Array.from(array)
+    .map(value => String.fromCharCode(value))
+    .join('')
+}
+
 describe('encode', function() {
   it('should return empty string', function() {
     expect(encode(new Uint8Array())).toStrictEqual('')
@@ -59,12 +65,13 @@ describe('encode', function() {
 
   it('should return HelloWorld', function() {
     expect(encode(testData1)).toStrictEqual('HelloWorld')
+    expect(encode(arrayToString(testData1))).toStrictEqual('HelloWorld')
   })
 
   it('should return encoded string', function() {
-    expect(encode(testData2)).toStrictEqual(
-      'JTKVSB%%)wK0E.X)V>+}o?pNmC{O&4W4b!Ni{Lh6'
-    )
+    const encoded = 'JTKVSB%%)wK0E.X)V>+}o?pNmC{O&4W4b!Ni{Lh6'
+    expect(encode(testData2)).toStrictEqual(encoded)
+    expect(encode(arrayToString(testData2))).toStrictEqual(encoded)
   })
 })
 
@@ -77,6 +84,10 @@ describe('decode', function() {
   it('should return null when string length is not divisible by 5', function() {
     expect(decode('a')).toBeNull()
     expect(decode('abc')).toBeNull()
+  })
+
+  it('should return null when string includes invalid characters', function() {
+    expect(decode('abcd~')).toBeNull()
   })
 
   it('should return test data 1', function() {
